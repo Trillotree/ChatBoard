@@ -1,142 +1,5455 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat Platform with Donations</title>
-  <style>
-    /* Basic Styles for Chat */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-    #chatbox {
-      width: 100%;
-      height: 400px;
-      border: 1px solid #ccc;
-      overflow-y: scroll;
-      margin-bottom: 10px;
-    }
-    .message {
-      padding: 5px;
-      margin: 5px 0;
-    }
-    .user-message {
-      color: blue;
-    }
-    .admin-message {
-      color: red;
-    }
-    .donations {
-      background-color: #f2f2f2;
-      padding: 10px;
-      margin-top: 20px;
-    }
-    #donation-container {
-      margin-top: 20px;
-    }
-    .paypal-button {
-      margin: 10px 0;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>Welcome to the Chat Platform</h1>
-
-  <!-- Donation Ribbon -->
-  <div class="donations">
-    <h2>Top Donators in This Chat</h2>
-    <div id="top-donator"></div>
-    <h3>Most Recent Donators</h3>
-    <div id="recent-donators"></div>
-  </div>
-
-  <!-- Chat Box -->
-  <div id="chatbox">
-    <!-- Messages will appear here -->
-    <div class="message user-message">User: Hello, how are you?</div>
-    <div class="message admin-message">Admin: Welcome! Please follow the rules.</div>
-  </div>
-
-  <!-- PayPal Buttons (for donations) -->
-  <div id="donation-container">
-    <h2>Support with Donations:</h2>
-    
-    <!-- PayPal Button for Emoji -->
-    <div id="paypal-container-PV2C97PMR5SL8" class="paypal-button"></div>
-    
-    <!-- PayPal Button for Special Emoji -->
-    <div id="paypal-container-LH8JM3SFJ3QVN" class="paypal-button"></div>
-    
-    <!-- PayPal Button for Gifs -->
-    <div id="paypal-container-RNVV59RFGE59W" class="paypal-button"></div>
-    
-    <!-- PayPal Button for Special Gif -->
-    <div id="paypal-container-SWKRHZYQVSHWA" class="paypal-button"></div>
-
-    <!-- PayPal Button for Pin Message -->
-    <div id="paypal-container-P6K9J8G2HAMUW" class="paypal-button"></div>
-    
-    <!-- PayPal Button for Custom Picture -->
-    <div id="paypal-container-CEBW6RPLKAQTW" class="paypal-button"></div>
-
-    <!-- PayPal Subscription -->
-    <div id="paypal-button-container-P-49B96292AK6416152M5HRP3Q"></div>
-  </div>
-
-  <!-- Scripts for PayPal Buttons -->
-  <script src="https://www.paypal.com/sdk/js?client-id=BAAhrvwpPMpBELgiTUapP5syZ3OyvLZnBns22LNDCz534zVqeDnNE-eOdhSjyDuoYOgBYkJWHCgSxitMN8&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
-  <script>
-    // Render PayPal Buttons
-    paypal.HostedButtons({
-      hostedButtonId: "PV2C97PMR5SL8",
-    }).render("#paypal-container-PV2C97PMR5SL8");
-
-    paypal.HostedButtons({
-      hostedButtonId: "LH8JM3SFJ3QVN",
-    }).render("#paypal-container-LH8JM3SFJ3QVN");
-
-    paypal.HostedButtons({
-      hostedButtonId: "RNVV59RFGE59W",
-    }).render("#paypal-container-RNVV59RFGE59W");
-
-    paypal.HostedButtons({
-      hostedButtonId: "SWKRHZYQVSHWA",
-    }).render("#paypal-container-SWKRHZYQVSHWA");
-
-    paypal.HostedButtons({
-      hostedButtonId: "P6K9J8G2HAMUW",
-    }).render("#paypal-container-P6K9J8G2HAMUW");
-
-    paypal.HostedButtons({
-      hostedButtonId: "CEBW6RPLKAQTW",
-    }).render("#paypal-container-CEBW6RPLKAQTW");
-
-    paypal.Buttons({
-      style: {
-        shape: 'pill',
-        color: 'gold',
-        layout: 'vertical',
-        label: 'subscribe'
-      },
-      createSubscription: function(data, actions) {
-        return actions.subscription.create({
-          plan_id: 'P-49B96292AK6416152M5HRP3Q'
-        });
-      },
-      onApprove: function(data, actions) {
-        alert("Subscription Successful!");
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Board</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAhrvwpPMpBELgiTUapP5syZ3OyvLZnBns22LNDCz534zVqeDnNE-eOdhSjyDuoYOgBYkJWHCgSxitMN8&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
+    <style>
+      /* GENERAL STYLES: Background, overall text color, and basic styling */
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        background-color: transparent;
+        color: rgb(0, 0, 0);
+        padding: 1px;
+        text-shadow: -0.5px -0.5px 0 #fff, 0.5px -0.5px 0 #fff,
+          -0.5px 0.5px 0 #fff, 0.5px 0.5px 0 #fff;
       }
-    }).render('#paypal-button-container-P-49B96292AK6416152M5HRP3Q');
-  </script>
 
-  <script>
-    // Update the chat to show donation status
-    // Example: This could be dynamically updated via server-side or database logic
-    document.getElementById("top-donator").innerHTML = "Top Donator: User123 - $50";
-    document.getElementById("recent-donators").innerHTML = "Recent Donators: User456 - $20, User789 - $15";
-  </script>
-</body>
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .box {
+        background-size: 100% 100%; /* Stretch the background image to fit both width and height */
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        padding: 5px;
+        margin: 5px 0;
+        overflow: hidden;
+      }
+
+      .box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0); /* 10% black tint */
+        z-index: 1;
+      }
+
+      .box * {
+        position: relative;
+        z-index: 2;
+      }
+
+      h1,
+      h2,
+      p {
+        text-align: center;
+      }
+
+      /* CHAT BOARD Container - Chat box Container */
+      #chat-board {
+        height: 500px;
+        width: 100%;
+        max-width: 800px;
+        margin: 0.5px;
+        padding: 10px;
+        background-image: url("https://i.imgur.com/lRDuKmy.png");
+        background-size: 100% 100%;
+        position: relative;
+        border: none;
+      }
+
+      /* INNER BOX for Chat Comments */
+      #chat-board-inner {
+        background: rgba(0, 0, 0, 0.13);
+        padding: 5px;
+        position: absolute;
+        top: 90px;
+        left: 15%;
+        right: 15%;
+        bottom: 90px;
+        min-width: 2.5in;
+        overflow-y: auto;
+        background-size: 100%;
+        word-wrap: break-word;
+        word-break: break-word;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      #chat-board::-webkit-scrollbar {
+        width: 0px; /* Hide scrollbar */
+      }
+
+      #chat-board::-webkit-scrollbar-thumb {
+        background-color: transparent; /* Hide the thumb */
+      }
+
+      #chat-board::-webkit-scrollbar-track {
+        background: transparent; /* Hide the track */
+      }
+
+      .message {
+        border-bottom: 1px solid #00000073;
+        padding: 0px;
+        text-shadow: -0.5px -0.5px 0 #fff, 0.5px -0.5px 0 #fff,
+          -0.5px 0.5px 0 #fff, 0.5px 0.5px 0 #fff;
+      }
+
+      .message img {
+        margin-right: 10px;
+      }
+
+      .message .content {
+        display: inline-block;
+        vertical-align: Left;
+      }
+
+      /* MESSAGE SENDING SECTION: Styles for sending and typing messages */
+      #message-input {
+        width: 85%;
+        height: 100px;
+        padding: 1px;
+        font-size: 16px;
+        font-weight: bold;
+        color: rgb(0, 0, 0);
+        text-shadow: -0.5px -0.5px 0 #fff, 0.5px -0.5px 0 #fff,
+          -0.5px 0.5px 0 #fff, 0.5px 0.5px 0 #fff;
+      }
+
+/* Adjusting button container for consistent spacing */
+.button-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 30px; /* Add extra space to container for items to avoid cutoff */
+  z-index: 100;
+  gap: 10px; /* Add consistent spacing between all buttons */
+}
+
+/* Common styles for all buttons */
+#send-message-btn,
+#emoji-btn,
+#sticker-btn,
+#gift-btn {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Specific styles for each button - Start - Do Not Delete */
+#send-message-btn {
+  background-color: #f0f0f070;
+  color: rgb(0, 0, 0);
+}
+
+#emoji-btn,
+{
+  background-color: #f0f0f060;
+  border: 2px solid #000000;
+}
+#sticker-btn,
+{
+  background-color: #f0f0f060;
+  border: 2px solid #000000;
+}
+#gift-btn 
+{
+  background-color: #f0f0f060;
+  border: 2px solid #000000;
+}
+/* Specific styles for each button - End - Do Not Delete */
+      #picture-upload {
+        display: none;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      #picture-preview {
+        margin-top: 20px;
+      }
+
+      #gift-images {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+      }
+
+      #gift-images img {
+        cursor: pointer;
+        margin: 5px;
+      }
+
+      .box input,
+      .box textarea {
+        background-color: rgba(0, 0, 0, 0.103);
+        border: none;
+        padding: 10px;
+        width: 40%;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+
+      #username {
+        width: 60%;
+        font-size: 16px;
+        padding: 5px;
+        color: rgb(93, 180, 255);
+        font-weight: bold;
+        text-shadow: -0.5px -0.5px 0 #ffffff, 0.5px -0.5px 0 #fff,
+          -0.5px 0.5px 0 #fff, 0.5px 0.5px 0 #fff;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: -105px; /* Move buttons up */
+        top: -110px;
+      }
+
+      .token-counter {
+        margin-left: 20px;
+        text-align: center;
+      }
+
+      .token-counter p {
+        margin: 0;
+      }
+
+      .disclaimer {
+        font-size: 12px;
+        color: gray;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .coin-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 2px solid black;
+        z-index: 1000;
+      }
+
+      .coin-popup button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      /* Sizes for emojis, stickers, and gifts */
+      .emoji {
+        width: 50px;
+        height: 50px;
+      }
+
+      .sticker {
+        width: 60px;
+        height: 60px;
+      }
+
+      .gift {
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- CHAT BOARD: Area to display chat messages -->
+      <div id="chat-board" class="box">
+        <div id="chat-board-inner">
+          <!-- Messages will appear here -->
+        </div>
+      </div>
+      <!-- End of Chat Board Section -->
+
+      <!-- MESSAGE SENDING SECTION: Input fields and send message button -->
+      <div
+        class="box"
+        style="
+          background-image: url('https://i.imgur.com/oLCkymS.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          position: relative;
+          padding: 30px;
+          margin: 0px 0;
+          overflow: hidden;
+          top: -10px;
+          left: 12%;
+          right: 10%;
+          bottom: 20%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 450px;
+          min-width: 300px;
+          max-width: 70%;
+          max-height: 150%;
+          height: 600px; /* Increase the height as needed */
+        "
+      >
+        <div
+          class="username-container"
+          style="
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-bottom: 10px;
+            top: -140px;
+          "
+        >
+          <input
+            type="text"
+            id="username"
+            name="username"
+            maxlength="30"
+            placeholder="Enter Username"
+            onblur="checkUsername()"
+            style="
+              flex: 1 1 auto;
+              font-size: 16px;
+              margin-right: 10px;
+              margin-left: 10px;
+            "
+          />
+          <button
+            type="button"
+            onclick="generateRandomName()"
+            style="
+  background-color: #f0f0f060;
+  border: 2px solid #000000;
+  padding: 2px 2px;
+  margin-right: 13px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  Top:5px;
+            "
+          >
+            Random
+          </button>
+        </div>
+
+        <p id="error-message" style="color: rgb(123, 8, 8)"></p>
+
+        <textarea
+          id="message-input"
+          rows="4"
+          placeholder="Type a message..."
+          maxlength="200"
+          style="
+            width: 90%;
+            height: 60px;
+            position: Center;
+            top: -190px;
+            right: 20px;
+            margin-bottom: 10px;
+          "
+        ></textarea>
+        <br />
+
+        <!-- Button container for Send Message, Emoji, Sticker, and Highlight buttons -->
+        <div class="button-container">
+          <button id="send-message-btn" onclick="sendMessage()">Send</button>
+
+
+
+<!-- Section 1 -->
+<!-- Emoji Sticker - Emoji ButtonEmojis Below -->
+<!-- Emoji Sticker DropDown Emojis Below -->
+          
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emoji Picker</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        position: relative; /* Ensure the dropdown can appear outside the container */
+      }
+
+      .emoji-button,
+      #emoji-btn {
+        cursor: pointer;
+        background-color: #ffffff3d;
+        border: 2px solid #000000;
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      .emoji-dropdown {
+        display: none;
+        position: Flex;
+        border: 0px solid #cccccc;
+        background-color: rgba(255, 255, 255, 0.719);
+        padding: 0px;
+        border-radius: 0px;
+        width: 400px;
+        max-width: 700px;
+        z-index: 900;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        overflow: visible;
+}
+
+
+.folder {
+    display: flex;
+    justify-content: Flex;
+    margin-bottom: 10px;
+    width: 100%; /* Make the folder section wider */
+  }
+
+      .folder img {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+      }
+
+      .emoji-container {
+        display: none;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+      }
+
+      .emoji-container img {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+      }
+
+      /* Adjusting button container for more space */
+      .button-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 30px; /* Add extra space to container for stickers avoid cutoff */
+        z-index: 100;
+    }
+
+      /* Adjust the emoji dropdown to ensure it is fully visible */
+      .emoji-dropdown {
+        position: absolute;
+        top: -100px; /* Positioning it Higher or Lower to avoid cutting off */
+        left: 0;
+        right: 0;
+        z-index: 101; /* Make sure dropdown is on top */
+    }
+
+      /* Emoji container styles for better layout */
+      .emoji-container {
+        display: none;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
+        padding: 2px;
+        max-height: 500px; /* Limit height for scrolling */
+      }
+    </style>
+  </head>
+  <body>
+    <button id="emoji-btn" onclick="toggleEmojiDropdown()">Emoji</button>
+
+    <!-- Emoji Dropdown -->
+    <div class="emoji-dropdown">
+      <div class="folder">
+        <img
+          src="https://i.imgur.com/rkdZo1T.png"
+          alt="Blue Cat Emoji"
+          data-folder="BlueCatEmoji"
+        />
+        <img
+          src="https://i.imgur.com/bHkhAec.png"
+          alt="Pink Cat Emoji"
+          data-folder="PinkCatEmoji"
+        />
+        <img
+          src="https://i.imgur.com/wTpu1XI.png"
+          alt="Yellow Cat Emoji"
+          data-folder="YellowCatEmoji"
+        />
+        <img
+          src="https://i.imgur.com/jsMITiU.png"
+          alt="Purple Cat Emoji"
+          data-folder="PurpleCatEmoji"
+        />
+        <img
+          src="https://i.imgur.com/AU8UJlv.png"
+          alt="Green Cat Emoji"
+          data-folder="GreenCatEmoji"
+        />
+        <img
+          src="https://i.imgur.com/xtekyoB.png"
+          alt="Orange Cat Emoji"
+          data-folder="OrangeCatEmoji"
+        />
+        <img
+          src="https://i.imgur.com/MmucZQl.png"
+          alt="White Cat Emoji"
+          data-folder="WhiteCatEmoji"
+        />
+        <img
+          src="https://i.imgur.com/EH4E2AD.png"
+          alt="Blue Star Emoji"
+          data-folder="BlueStarEmoji"
+        />
+        <img
+          src="https://i.imgur.com/Hr9EMkI.png"
+          alt="Yellow Star Emoji"
+          data-folder="YellowStarEmoji"
+        />
+        <img
+          src="https://i.imgur.com/v1QnMo9.png"
+          alt="Black Hacker Emoji"
+          data-folder="BlackHackerEmoji"
+        />
+        <img
+          src="https://i.imgur.com/oBjTIzl.png"
+          alt="White Hacker Emoji"
+          data-folder="WhiteHackerEmoji"
+        />
+      </div>
+
+      <!-- Emoji Containers for each folder -->
+
+      <!-- Blue Cat - Emoji Container -->
+      <div class="emoji-container" id="BlueCatEmoji">
+        <img
+        src="https://i.imgur.com/nE1edWU.png"
+        alt="Blue Cat Emoji 0"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/U43s6TW.png"
+        alt="Blue Cat Emoji 1"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/K1iXzg0.png"
+        alt="Blue Cat Emoji 2"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jPxfIHM.png"
+        alt="Blue Cat Emoji 3"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/rkdZo1T.png"
+        alt="Blue Cat Emoji 4"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/PHpc1zc.png"
+        alt="Blue Cat Emoji 5"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ssdPz3Z.png"
+        alt="Blue Cat Emoji 6"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/HRLwz5f.png"
+        alt="Blue Cat Emoji 7"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/AJjO4dn.png"
+        alt="Blue Cat Emoji 8"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/2MVs8vN.png"
+        alt="Blue Cat Emoji 9"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/pfr2qtH.png"
+        alt="Blue Cat Emoji 10"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/e3manoz.png"
+        alt="Blue Cat Emoji 11"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tQlJG3s.png"
+        alt="Blue Cat Emoji 12"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jHtsqyp.png"
+        alt="Blue Cat Emoji 13"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/LUVCDAC.png"
+        alt="Blue Cat Emoji 14"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/t0RzIcD.png"
+        alt="Blue Cat Emoji 15"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/c14cqAO.png"
+        alt="Blue Cat Emoji 16"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/J7bmRPI.png"
+        alt="Blue Cat Emoji 17"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xLA8XFV.png"
+        alt="Blue Cat Emoji 18"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Tp4hqqH.png"
+        alt="Blue Cat Emoji 19"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/OmdLf4i.png"
+        alt="Blue Cat Emoji 20"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/W6G2zFF.png"
+        alt="Blue Cat Emoji 21"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/BRuY40V.png"
+        alt="Blue Cat Emoji 22"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/x6ZjhZp.png"
+        alt="Blue Cat Emoji 23"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/y2MmJwB.png"
+        alt="Blue Cat Emoji 24"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/yDeWQ4O.png"
+        alt="Blue Cat Emoji 25"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/RL8DvZf.png"
+        alt="Blue Cat Emoji 26"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/s4U1UvZ.png"
+        alt="Blue Cat Emoji 27"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/VYjXDiY.png"
+        alt="Blue Cat Emoji 28"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/oboZ49X.png"
+        alt="Blue Cat Emoji 29"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Kw9v6pO.png"
+        alt="Blue Cat Emoji 30"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/f34aJsT.png"
+        alt="Blue Cat Emoji 31"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/lXl6djV.png"
+        alt="Blue Cat Emoji 32"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/gY8Sc92.png"
+        alt="Blue Cat Emoji 33"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/5ocNrnb.png"
+        alt="Blue Cat Emoji 34"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Y3g5Bmw.png"
+        alt="Blue Cat Emoji 35"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/sO7XCSU.png"
+        alt="Blue Cat Emoji 36"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/itlrqek.png"
+        alt="Blue Cat Emoji 37"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/sO7XCSU.png"
+        alt="Blue Cat Emoji 38"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/itlrqek.png"
+        alt="Blue Cat Emoji 39"
+        class="BlueCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more Blue Cat Emojis here -->
+      </div>
+
+      <!-- Pink Cat - Emoji Container -->
+      <div class="emoji-container" id="PinkCatEmoji">
+        <img
+        src="https://i.imgur.com/tTmJYn0.png"
+        alt="Pink Cat Emoji 0"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/z1cJIvQ.png"
+        alt="Pink Cat Emoji 1"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/6sCEV4p.png"
+        alt="Pink Cat Emoji 2"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/vMgyWd2.png"
+        alt="Pink Cat Emoji 3"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/r88oWqI.png"
+        alt="Pink Cat Emoji 4"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/6has5t0.png"
+        alt="Pink Cat Emoji 5"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/S2l63WI.png"
+        alt="Pink Cat Emoji 6"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/TRSByYV.png"
+        alt="Pink Cat Emoji 7"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/MqJlE6p.png"
+        alt="Pink Cat Emoji 8"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/CNk8Drx.png"
+        alt="Pink Cat Emoji 9"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zaapLSq.png"
+        alt="Pink Cat Emoji 10"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zY4ABvh.png"
+        alt="Pink Cat Emoji 11"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/9bHSRcH.png"
+        alt="Pink Cat Emoji 12"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/9ZwPsS2.png"
+        alt="Pink Cat Emoji 13"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/urbEtQ1.png"
+        alt="Pink Cat Emoji 14"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/upW1qzt.png"
+        alt="Pink Cat Emoji 15"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hBbWfH6.png"
+        alt="Pink Cat Emoji 16"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/bZr2FRW.png"
+        alt="Pink Cat Emoji 17"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/FuOpu7z.png"
+        alt="Pink Cat Emoji 18"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/DECZE1Y.png"
+        alt="Pink Cat Emoji 19"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/LrFvx3r.png"
+        alt="Pink Cat Emoji 20"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/11w4vMa.png"
+        alt="Pink Cat Emoji 21"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1UZ3bLC.png"
+        alt="Pink Cat Emoji 22"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Vtk1SGj.png"
+        alt="Pink Cat Emoji 23"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/cgh2OTN.png"
+        alt="Pink Cat Emoji 24"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/6czgbwG.png"
+        alt="Pink Cat Emoji 25"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/fRKr3m0.png"
+        alt="Pink Cat Emoji 26"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/vXMbGG0.png"
+        alt="Pink Cat Emoji 27"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/vnBzYkU.png"
+        alt="Pink Cat Emoji 28"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/bHkhAec.png"
+        alt="Pink Cat Emoji 29"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/BokaHlh.png"
+        alt="Pink Cat Emoji 30"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/m5vsrZJ.png"
+        alt="Pink Cat Emoji 31"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/IQD2nPz.png"
+        alt="Pink Cat Emoji 32"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/dtyYCKu.png"
+        alt="Pink Cat Emoji 33"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jCWVKIq.png"
+        alt="Pink Cat Emoji 34"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jMbNOdh.png"
+        alt="Pink Cat Emoji 35"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/x29BEjt.png"
+        alt="Pink Cat Emoji 36"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/kcJ7obz.png"
+        alt="Pink Cat Emoji 37"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hKCVQWL.png"
+        alt="Pink Cat Emoji 38"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/WMH1k17.png"
+        alt="Pink Cat Emoji 39"
+        class="PinkCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more Pink Cat Emojis here -->
+      </div>
+
+      <!-- Yellow Cat - Emoji Container -->
+      <div class="emoji-container" id="YellowCatEmoji">
+        <img
+        src="https://i.imgur.com/hufySyr.png"
+        alt="Yellow Cat Emoji 0"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/5rLMtFE.png"
+        alt="Yellow Cat Emoji 1"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/74VYw7X.png"
+        alt="Yellow Cat Emoji 2"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/paibYHJ.png"
+        alt="Yellow Cat Emoji 3"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/fElf0R6.png"
+        alt="Yellow Cat Emoji 4"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/HrdryIW.png"
+        alt="Yellow Cat Emoji 5"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/wO6Sr6g.png"
+        alt="Yellow Cat Emoji 6"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/RulO6d7.png"
+        alt="Yellow Cat Emoji 7"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tDxzmDr.png"
+        alt="Yellow Cat Emoji 8"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Iw6djo6.png"
+        alt="Yellow Cat Emoji 9"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xbY649n.png"
+        alt="Yellow Cat Emoji 10"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EOl1SV2.png"
+        alt="Yellow Cat Emoji 11"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xQqBb2f.png"
+        alt="Yellow Cat Emoji 12"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/bbG7TUh.png"
+        alt="Yellow Cat Emoji 13"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/JhJvp8r.png"
+        alt="Yellow Cat Emoji 14"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/p8tgcj9.png"
+        alt="Yellow Cat Emoji 15"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/VQlGc8A.png"
+        alt="Yellow Cat Emoji 16"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ujdPPGB.png"
+        alt="Yellow Cat Emoji 17"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/CvutSWa.png"
+        alt="Yellow Cat Emoji 18"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/NcPgB4A.png"
+        alt="Yellow Cat Emoji 19"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/3K59A7m.png"
+        alt="Yellow Cat Emoji 20"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zlCo1jn.png"
+        alt="Yellow Cat Emoji 21"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/fj1MU5N.png"
+        alt="Yellow Cat Emoji 22"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ADZf6Ep.png"
+        alt="Yellow Cat Emoji 23"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/n5b9wQ1.png"
+        alt="Yellow Cat Emoji 24"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zssDlJ0.png"
+        alt="Yellow Cat Emoji 25"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/gsFD2cr.png"
+        alt="Yellow Cat Emoji 26"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tkBlQ7U.png"
+        alt="Yellow Cat Emoji 27"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/wTpu1XI.png"
+        alt="Yellow Cat Emoji 28"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/KrTLF9M.png"
+        alt="Yellow Cat Emoji 29"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/9fhilYg.png"
+        alt="Yellow Cat Emoji 30"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Ap31lVz.png"
+        alt="Yellow Cat Emoji 31"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1ZpHaxm.png"
+        alt="Yellow Cat Emoji 32"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/474ZMwf.png"
+        alt="Yellow Cat Emoji 33"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/W2meWdk.png"
+        alt="Yellow Cat Emoji 34"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zl3Dd59.png"
+        alt="Yellow Cat Emoji 35"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/J1NzAa3.png"
+        alt="Yellow Cat Emoji 36"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/3C5X5NA.png"
+        alt="Yellow Cat Emoji 37"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/dMCfqka.png"
+        alt="Yellow Cat Emoji 38"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/6acy1DD.png"
+        alt="Yellow Cat Emoji 39"
+        class="YellowCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more Yellow Cat Emojis here -->
+      </div>
+
+      <!-- Purple Cat - Emoji Container -->
+      <div class="emoji-container" id="PurpleCatEmoji">
+        <img
+        src="https://i.imgur.com/TZCEabQ.png"
+        alt="Purple Cat Emoji 0"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jsMITiU.png"
+        alt="Purple Cat Emoji 1"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/XwD6Ckt.png"
+        alt="Purple Cat Emoji 2"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/6U6aDsL.png"
+        alt="Purple Cat Emoji 3"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/eDV9kMy.png"
+        alt="Purple Cat Emoji 4"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Z8TY2Hq.png"
+        alt="Purple Cat Emoji 5"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/U30Gaqd.png"
+        alt="Purple Cat Emoji 6"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/s9mCWdk.png"
+        alt="Purple Cat Emoji 7"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/5jB9ubz.png"
+        alt="Purple Cat Emoji 8"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/XPfbTHi.png"
+        alt="Purple Cat Emoji 9"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/0tPCd7Q.png"
+        alt="Purple Cat Emoji 10"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/UIWoF3b.png"
+        alt="Purple Cat Emoji 11"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/SFruAwE.png"
+        alt="Purple Cat Emoji 12"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/TFI3h7q.png"
+        alt="Purple Cat Emoji 13"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/HiOJoFn.png"
+        alt="Purple Cat Emoji 14"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/mXm5FA7.png"
+        alt="Purple Cat Emoji 15"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/GtCoIC9.png"
+        alt="Purple Cat Emoji 16"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/DqtgqHA.png"
+        alt="Purple Cat Emoji 17"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/7dJeVAk.png"
+        alt="Purple Cat Emoji 18"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tAwZJMl.png"
+        alt="Purple Cat Emoji 19"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Xpfn5H3.png"
+        alt="Purple Cat Emoji 20"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/UoHDNs7.png"
+        alt="Purple Cat Emoji 21"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/wb5p8l6.png"
+        alt="Purple Cat Emoji 22"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/iI5eldc.png"
+        alt="Purple Cat Emoji 23"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/0hYkzje.png"
+        alt="Purple Cat Emoji 24"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/JAxxGF8.png"
+        alt="Purple Cat Emoji 25"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/y1RDkP6.png"
+        alt="Purple Cat Emoji 26"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/3H4kGud.png"
+        alt="Purple Cat Emoji 27"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hAhmo0B.png"
+        alt="Purple Cat Emoji 28"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/u05wPG4.png"
+        alt="Purple Cat Emoji 29"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/108rANl.png"
+        alt="Purple Cat Emoji 30"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/mARVFmZ.png"
+        alt="Purple Cat Emoji 31"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/uavdzwQ.png"
+        alt="Purple Cat Emoji 32"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/P7E7CYj.png"
+        alt="Purple Cat Emoji 33"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/JuDO0II.png"
+        alt="Purple Cat Emoji 34"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/vxeiRyJ.png"
+        alt="Purple Cat Emoji 35"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/q9zy5l4.png"
+        alt="Purple Cat Emoji 36"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EE8djKe.png"
+        alt="Purple Cat Emoji 37"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/LKntRoB.png"
+        alt="Purple Cat Emoji 38"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ue1jLST.png"
+        alt="Purple Cat Emoji 39"
+        class="PurpleCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more Purple Cat Emojis here -->
+      </div>
+
+      <!-- Green Cat - Emoji Container -->
+      <div class="emoji-container" id="GreenCatEmoji">
+        <img
+        src="https://i.imgur.com/BkK267J.png"
+        alt="Green Cat Emoji 0"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/OXlzP0Q.png"
+        alt="Green Cat Emoji 1"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/GdVn2U7.png"
+        alt="Green Cat Emoji 2"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/gxdtQMO.png"
+        alt="Green Cat Emoji 3"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/FXgr6pd.png"
+        alt="Green Cat Emoji 4"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/0hxUJx4.png"
+        alt="Green Cat Emoji 5"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/QIJnPpC.png"
+        alt="Green Cat Emoji 6"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/PB39msO.png"
+        alt="Green Cat Emoji 7"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/KMmqzhg.png"
+        alt="Green Cat Emoji 8"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/5EhdMp6.png"
+        alt="Green Cat Emoji 9"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/C26odlo.png"
+        alt="Green Cat Emoji 10"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ASOBe22.png"
+        alt="Green Cat Emoji 11"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/73HfpGQ.png"
+        alt="Green Cat Emoji 12"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tThvPTP.png"
+        alt="Green Cat Emoji 13"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/OjwjMFN.png"
+        alt="Green Cat Emoji 14"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/5FoeKbe.png"
+        alt="Green Cat Emoji 15"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/nUSfqgI.png"
+        alt="Green Cat Emoji 16"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ArPbxig.png"
+        alt="Green Cat Emoji 17"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xQtQKVj.png"
+        alt="Green Cat Emoji 18"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ZYOxMV9.png"
+        alt="Green Cat Emoji 19"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/NVOvXzI.png"
+        alt="Green Cat Emoji 20"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1OvB4cY.png"
+        alt="Green Cat Emoji 21"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/DbB2iND.png"
+        alt="Green Cat Emoji 22"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/suORUNP.png"
+        alt="Green Cat Emoji 23"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/qh5rPLX.png"
+        alt="Green Cat Emoji 24"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/h2mH478.png"
+        alt="Green Cat Emoji 25"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/pNKb12F.png"
+        alt="Green Cat Emoji 26"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/j2xUvOo.png"
+        alt="Green Cat Emoji 27"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/H9cx8IR.png"
+        alt="Green Cat Emoji 28"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/wjYqLeL.png"
+        alt="Green Cat Emoji 29"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/AU8UJlv.png"
+        alt="Green Cat Emoji 30"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/mkx0v8o.png"
+        alt="Green Cat Emoji 31"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zqqjFK8.png"
+        alt="Green Cat Emoji 32"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/XwDPZbP.png"
+        alt="Green Cat Emoji 33"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/MO0tUaC.png"
+        alt="Green Cat Emoji 34"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jWPOii3.png"
+        alt="Green Cat Emoji 35"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/b5tMpis.png"
+        alt="Green Cat Emoji 36"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/B3I3siJ.png"
+        alt="Green Cat Emoji 37"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/FxHlhxc.png"
+        alt="Green Cat Emoji 38"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/AQBpyBF.png"
+        alt="Green Cat Emoji 39"
+        class="GreenCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+
+
+        <!-- Add more Green Cat Emojis here -->
+      </div>
+
+      <!-- Orange Cat - Emoji Container -->
+      <div class="emoji-container" id="OrangeCatEmoji">
+        <img
+        src="https://i.imgur.com/ObmjllL.png"
+        alt="Orange Cat Emoji 0"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/NqH8aF5.png"
+        alt="Orange Cat Emoji 1"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/FsZI00O.png"
+        alt="Orange Cat Emoji 2"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xtekyoB.png"
+        alt="Orange Cat Emoji 3"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/gno9RDL.png"
+        alt="Orange Cat Emoji 4"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/lHXNkR6.png"
+        alt="Orange Cat Emoji 5"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/IHAzrG6.png"
+        alt="Orange Cat Emoji 6"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/fcZWYoR.png"
+        alt="Orange Cat Emoji 7"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/lDdrQeq.png"
+        alt="Orange Cat Emoji 8"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/gC1sxWX.png"
+        alt="Orange Cat Emoji 9"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/KLMDwS9.png"
+        alt="Orange Cat Emoji 10"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/x6RUffT.png"
+        alt="Orange Cat Emoji 11"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Sx3uVcV.png"
+        alt="Orange Cat Emoji 12"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/aIHR1Zy.png"
+        alt="Orange Cat Emoji 13"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/HT2nKhy.png"
+        alt="Orange Cat Emoji 14"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/8M5D1yy.png"
+        alt="Orange Cat Emoji 15"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/lrGqUkm.png"
+        alt="Orange Cat Emoji 16"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/s2GgMHl.png"
+        alt="Orange Cat Emoji 17"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/0oZshEL.png"
+        alt="Orange Cat Emoji 18"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zQ5GGb6.png"
+        alt="Orange Cat Emoji 19"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xxnVwdB.png"
+        alt="Orange Cat Emoji 20"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/YyGldsi.png"
+        alt="Orange Cat Emoji 21"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/3VRDoPd.png"
+        alt="Orange Cat Emoji 22"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/PslH9x2.png"
+        alt="Orange Cat Emoji 23"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/lVV9jfk.png"
+        alt="Orange Cat Emoji 24"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/A0kRhII.png"
+        alt="Orange Cat Emoji 25"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/8VGiJx0.png"
+        alt="Orange Cat Emoji 26"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1Z0yaVd.png"
+        alt="Orange Cat Emoji 27"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Txw25IS.png"
+        alt="Orange Cat Emoji 28"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/JULAKYF.png"
+        alt="Orange Cat Emoji 29"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ZbbDsDU.png"
+        alt="Orange Cat Emoji 30"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ebiJ89d.png"
+        alt="Orange Cat Emoji 31"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Pxw4y9e.png"
+        alt="Orange Cat Emoji 32"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/BgUetUo.png"
+        alt="Orange Cat Emoji 33"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/sQtTUN1.png"
+        alt="Orange Cat Emoji 34"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/K4vH8Ad.png"
+        alt="Orange Cat Emoji 35"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/qYR7GFM.png"
+        alt="Orange Cat Emoji 36"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/97vpFev.png"
+        alt="Orange Cat Emoji 37"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/SMgXKUW.png"
+        alt="Orange Cat Emoji 38"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/oU649hT.png"
+        alt="Orange Cat Emoji 39"
+        class="OrangeCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+
+        <!-- Add more Orange Cat Emojis here -->
+      </div>
+
+      <!-- White Cat - Emoji Container -->
+      <div class="emoji-container" id="WhiteCatEmoji">
+        <img
+        src="https://i.imgur.com/td6xq2E.png"
+        alt="White Cat Emoji 0"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/eZ83y9U.png"
+        alt="White Cat Emoji 1"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/RI3SgGK.png"
+        alt="White Cat Emoji 2"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EbHMnhU.png"
+        alt="White Cat Emoji 3"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/h1ZND5y.png"
+        alt="White Cat Emoji 4"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tOl1YXJ.png"
+        alt="White Cat Emoji 5"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/TXhEhBZ.png"
+        alt="White Cat Emoji 6"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/yE1STHy.png"
+        alt="White Cat Emoji 7"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/PxxXlam.png"
+        alt="White Cat Emoji 8"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/2F0hUK2.png"
+        alt="White Cat Emoji 9"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/s42Ny7x.png"
+        alt="White Cat Emoji 10"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/cfRbVix.png"
+        alt="White Cat Emoji 11"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/VsIXA4i.png"
+        alt="White Cat Emoji 12"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/lyiDkXZ.png"
+        alt="White Cat Emoji 13"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/BOF8krW.png"
+        alt="White Cat Emoji 14"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/waTKxiz.png"
+        alt="White Cat Emoji 15"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/7EeXkgX.png"
+        alt="White Cat Emoji 17"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/K47AYi0.png"
+        alt="White Cat Emoji 18"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/pinetHb.png"
+        alt="White Cat Emoji 19"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/CA4VnGa.png"
+        alt="White Cat Emoji 20"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/57jPbZu.png"
+        alt="White Cat Emoji 21"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/oXdN33w.png"
+        alt="White Cat Emoji 22"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Hdyzfo7.png"
+        alt="White Cat Emoji 23"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/UEeH63p.png"
+        alt="White Cat Emoji 24"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Mn9pKTB.png"
+        alt="White Cat Emoji 25"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/GF2MWFI.png"
+        alt="White Cat Emoji 26"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/h9i5P3z.png"
+        alt="White Cat Emoji 27"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/504y39E.png"
+        alt="White Cat Emoji 28"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/NlBnB66.png"
+        alt="White Cat Emoji 29"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/YIbKqEA.png"
+        alt="White Cat Emoji 30"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zHkqrxX.png"
+        alt="White Cat Emoji 31"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/MmucZQl.png"
+        alt="White Cat Emoji 32"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/aIk0au6.png"
+        alt="White Cat Emoji 33"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/CrPrdRz.png"
+        alt="White Cat Emoji 34"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/JCjVyMh.png"
+        alt="White Cat Emoji 35"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/joj1mwr.png"
+        alt="White Cat Emoji 36"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/41BZLMG.png"
+        alt="White Cat Emoji 37"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/pV3ic8H.png"
+        alt="White Cat Emoji 38"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/wgMwzLq.png"
+        alt="White Cat Emoji 39"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/YlEWXiS.png"
+        alt="White Cat Emoji 40"
+        class="WhiteCatEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more White Cat Emojis here -->
+      </div>
+
+      <!-- Blue Star - Emoji Container -->
+      <div class="emoji-container" id="BlueStarEmoji">
+        <img
+        src="https://i.imgur.com/auxF0lE.png"
+        alt="Blue Star Emoji 0"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Dnxsw3R.png"
+        alt="Blue Star Emoji 1"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/po1Eh3J.png"
+        alt="Blue Star Emoji 2"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/WMGHEGo.png"
+        alt="Blue Star Emoji 3"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/l1L9OtB.png"
+        alt="Blue Star Emoji 4"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/dSLkE2R.png"
+        alt="Blue Star Emoji 5"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EH4E2AD.png"
+        alt="Blue Star Emoji 6"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/YLQyPNW.png"
+        alt="Blue Star Emoji 7"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/UCgQYSo.png"
+        alt="Blue Star Emoji 8"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/6rS0vuU.png"
+        alt="Blue Star Emoji 9"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/DNAdmzL.png"
+        alt="Blue Star Emoji 10"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/iec6jPT.png"
+        alt="Blue Star Emoji 11"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/YJuIskk.png"
+        alt="Blue Star Emoji 12"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/K5j3tJO.png"
+        alt="Blue Star Emoji 13"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/a64pzw5.png"
+        alt="Blue Star Emoji 14"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/u3e7dlj.png"
+        alt="Blue Star Emoji 15"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/U6pIOey.png"
+        alt="Blue Star Emoji 16"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/c3n5pj5.png"
+        alt="Blue Star Emoji 17"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/RANDQWK.png"
+        alt="Blue Star Emoji 18"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/uSKozVW.png"
+        alt="Blue Star Emoji 19"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/t7XHuvo.png"
+        alt="Blue Star Emoji 20"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/IRLIGwL.png"
+        alt="Blue Star Emoji 21"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hsjH8XS.png"
+        alt="Blue Star Emoji 22"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/d3i9js5.png"
+        alt="Blue Star Emoji 23"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/SZ7sunk.png"
+        alt="Blue Star Emoji 24"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xhpOGRg.png"
+        alt="Blue Star Emoji 25"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hhG6FJ4.png"
+        alt="Blue Star Emoji 26"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/vjHPQnS.png"
+        alt="Blue Star Emoji 27"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ZDw13UH.png"
+        alt="Blue Star Emoji 28"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/5YEdbna.png"
+        alt="Blue Star Emoji 29"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/SjxxVt3.png"
+        alt="Blue Star Emoji 30"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tkBrBjH.png"
+        alt="Blue Star Emoji 31"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tEm8Fr4.png"
+        alt="Blue Star Emoji 32"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/enIPp8O.png"
+        alt="Blue Star Emoji 33"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EHAN7SO.png"
+        alt="Blue Star Emoji 34"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/qhtsbBT.png"
+        alt="Blue Star Emoji 35"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/kjS46lj.png"
+        alt="Blue Star Emoji 36"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Y19lh7A.png"
+        alt="Blue Star Emoji 37"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/BSAkiPL.png"
+        alt="Blue Star Emoji 38"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/m93hNsR.png"
+        alt="Blue Star Emoji 39"
+        class="BlueStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more Blue Star Emojis here -->
+      </div>
+
+      <!-- Yellow Star - Emoji Container -->
+      <div class="emoji-container" id="YellowStarEmoji">
+        <img
+        src="https://i.imgur.com/tRviXO9.png"
+        alt="Yellow Star Emoji 0"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Po1MP6o.png"
+        alt="Yellow Star Emoji 1"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ROJPSLu.png"
+        alt="Yellow Star Emoji 2"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Hr9EMkI.png"
+        alt="Yellow Star Emoji 3"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/AtkI1P1.png"
+        alt="Yellow Star Emoji 4"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/S79qDOd.png"
+        alt="Yellow Star Emoji 5"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1eGwBIT.png"
+        alt="Yellow Star Emoji 6"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/WxVN7xO.png"
+        alt="Yellow Star Emoji 7"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/8QF0vML.png"
+        alt="Yellow Star Emoji 8"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/4iPt7xZ.png"
+        alt="Yellow Star Emoji 9"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/R9WBXNa.png"
+        alt="Yellow Star Emoji 10"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/lDthdQg.png"
+        alt="Yellow Star Emoji 11"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zXK5s11.png"
+        alt="Yellow Star Emoji 12"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hTkqM5m.png"
+        alt="Yellow Star Emoji 13"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/XfeyF76.png"
+        alt="Yellow Star Emoji 14"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/MUx4JAu.png"
+        alt="Yellow Star Emoji 15"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/nzJ1Nsp.png"
+        alt="Yellow Star Emoji 16"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Nw9RjET.png"
+        alt="Yellow Star Emoji 17"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/LAmEv4m.png"
+        alt="Yellow Star Emoji 18"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hLglY9R.png"
+        alt="Yellow Star Emoji 19"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/2cIigii.png"
+        alt="Yellow Star Emoji 20"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/C83WwoF.png"
+        alt="Yellow Star Emoji 21"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/qzVrlbv.png"
+        alt="Yellow Star Emoji 22"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/FB0PfDf.png"
+        alt="Yellow Star Emoji 23"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/0LA6AfY.png"
+        alt="Yellow Star Emoji 24"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/NCFnkAR.png"
+        alt="Yellow Star Emoji 25"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/GFvBDdn.png"
+        alt="Yellow Star Emoji 26"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/f38i23V.png"
+        alt="Yellow Star Emoji 27"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/M9t3Yvj.png"
+        alt="Yellow Star Emoji 28"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jfutwxY.png"
+        alt="Yellow Star Emoji 29"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/rG4uuEw.png"
+        alt="Yellow Star Emoji 30"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EzGYWOU.png"
+        alt="Yellow Star Emoji 31"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/2CRQufH.png"
+        alt="Yellow Star Emoji 32"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/gdzm7JP.png"
+        alt="Yellow Star Emoji 33"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/6zkW4Pu.png"
+        alt="Yellow Star Emoji 34"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/YXi8Fg7.png"
+        alt="Yellow Star Emoji 35"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/3eN6hAz.png"
+        alt="Yellow Star Emoji 36"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/iqHePAh.png"
+        alt="Yellow Star Emoji 37"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/VN9yenv.png"
+        alt="Yellow Star Emoji 38"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/JUtOhO1.png"
+        alt="Yellow Star Emoji 39"
+        class="YellowStarEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more Yellow Star Emojis here -->
+      </div>
+
+      <!-- Black Hacker - Emoji Container -->
+      <div class="emoji-container" id="BlackHackerEmoji">
+        <img
+        src="https://i.imgur.com/H4zwgDA.png"
+        alt="Black Hacker Emoji 0"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Sqevofd.png"
+        alt="Black Hacker Emoji 1"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/W5cFQfi.png"
+        alt="Black Hacker Emoji 2"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/GSu5U1w.png"
+        alt="Black Hacker Emoji 3"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/nULYsTm.png"
+        alt="Black Hacker Emoji 4"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/DNBkt1s.png"
+        alt="Black Hacker Emoji 5"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/S1nMhly.png"
+        alt="Black Hacker Emoji 6"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/sNtiCU0.png"
+        alt="Black Hacker Emoji 7"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/kYpCxLO.png"
+        alt="Black Hacker Emoji 8"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/v1QnMo9.png"
+        alt="Black Hacker Emoji 9"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/N3BTwpe.png"
+        alt="Black Hacker Emoji 10"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/HpgO8p0.png"
+        alt="Black Hacker Emoji 11"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xm4VYVI.png"
+        alt="Black Hacker Emoji 12"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ASVrxkb.png"
+        alt="Black Hacker Emoji 13"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/bWdWwO0.png"
+        alt="Black Hacker Emoji 14"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/OtI9XH4.png"
+        alt="Black Hacker Emoji 15"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/HcsMhv2.png"
+        alt="Black Hacker Emoji 16"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/DguEWZ2.png"
+        alt="Black Hacker Emoji 17"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Soffj6v.png"
+        alt="Black Hacker Emoji 18"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/WHrzB5G.png"
+        alt="Black Hacker Emoji 19"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/9kzJaoR.png"
+        alt="Black Hacker Emoji 20"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/DeNvHdd.png"
+        alt="Black Hacker Emoji 21"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/KaV2DF2.png"
+        alt="Black Hacker Emoji 22"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/HLi6kHH.png"
+        alt="Black Hacker Emoji 23"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/3lFZxCD.png"
+        alt="Black Hacker Emoji 24"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/BrMeohy.png"
+        alt="Black Hacker Emoji 25"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1Phbfeo.png"
+        alt="Black Hacker Emoji 26"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ebtJM3p.png"
+        alt="Black Hacker Emoji 27"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/9LfJBjP.png"
+        alt="Black Hacker Emoji 28"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/sMGFoUb.png"
+        alt="Black Hacker Emoji 29"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Zn6blUj.png"
+        alt="Black Hacker Emoji 30"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/v6bXK52.png"
+        alt="Black Hacker Emoji 31"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/BMrNkTz.png"
+        alt="Black Hacker Emoji 32"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EtyqiRy.png"
+        alt="Black Hacker Emoji 33"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/RQFKnB0.png"
+        alt="Black Hacker Emoji 34"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/mVZF0Yb.png"
+        alt="Black Hacker Emoji 35"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/jOYS5pr.png"
+        alt="Black Hacker Emoji 36"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/yqPEk3P.png"
+        alt="Black Hacker Emoji 37"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ShXdo60.png"
+        alt="Black Hacker Emoji 38"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EgO6Dnp.png"
+        alt="Black Hacker Emoji 39"
+        class="BlackHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more Black Hacker Emojis here -->
+      </div>
+
+      <!-- White Hacker - Emoji Container -->
+      <div class="emoji-container" id="WhiteHackerEmoji">
+        <img
+        src="https://i.imgur.com/m1NngF3.png"
+        alt="White Hacker Emoji 0"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/oBjTIzl.png"
+        alt="White Hacker Emoji 1"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1uD4PlI.png"
+        alt="White Hacker Emoji 2"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/PzwXB2a.png"
+        alt="White Hacker Emoji 3"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/wPzKe64.png"
+        alt="White Hacker Emoji 4"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/zUQldM3.png"
+        alt="White Hacker Emoji 5"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/wmWMrsE.png"
+        alt="White Hacker Emoji 6"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/D0HQUjE.png"
+        alt="White Hacker Emoji 7"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/SaInhaa.png"
+        alt="White Hacker Emoji 8"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/a2LxYSj.png"
+        alt="White Hacker Emoji 9"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/5hm5kPK.png"
+        alt="White Hacker Emoji 10"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/hpdbohr.png"
+        alt="White Hacker Emoji 11"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/xejUbDB.png"
+        alt="White Hacker Emoji 12"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/vG5aEuG.png"
+        alt="White Hacker Emoji 13"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/touuB4u.png"
+        alt="White Hacker Emoji 14"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/dqlS9x3.png"
+        alt="White Hacker Emoji 15"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/KLp40VX.png"
+        alt="White Hacker Emoji 16"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/g8YLURv.png"
+        alt="White Hacker Emoji 17"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/EMOwaWd.png"
+        alt="White Hacker Emoji 18"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/fex1P1z.png"
+        alt="White Hacker Emoji 19"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/1PbHLon.png"
+        alt="White Hacker Emoji 20"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/llFKDNp.png"
+        alt="White Hacker Emoji 21"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/Fd7zzUl.png"
+        alt="White Hacker Emoji 22"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/0C3JQmm.png"
+        alt="White Hacker Emoji 23"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/FfUcUSQ.png"
+        alt="White Hacker Emoji 24"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ZbQ48Wu.png"
+        alt="White Hacker Emoji 25"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/tgpWkLE.png"
+        alt="White Hacker Emoji 26"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/dXI7vB5.png"
+        alt="White Hacker Emoji 27"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/ry2Oqcy.png"
+        alt="White Hacker Emoji 28"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/qbpqsMo.png"
+        alt="White Hacker Emoji 29"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/4rZcLun.png"
+        alt="White Hacker Emoji 30"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/PQrQbQB.png"
+        alt="White Hacker Emoji 31"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/r8nzMbT.png"
+        alt="White Hacker Emoji 32"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/aIS7llu.png"
+        alt="White Hacker Emoji 33"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/aRmDhn5.png"
+        alt="White Hacker Emoji 34"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/glf4BwD.png"
+        alt="White Hacker Emoji 35"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/CYlYwzG.png"
+        alt="White Hacker Emoji 36"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/YEGhps8.png"
+        alt="White Hacker Emoji 37"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/vUTTqEI.png"
+        alt="White Hacker Emoji 38"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+      <img
+        src="https://i.imgur.com/kw8yhOB.png"
+        alt="White Hacker Emoji 39"
+        class="WhiteHackerEmoji"
+        onclick="selectEmoji(this)"
+      />
+        <!-- Add more White Hacker Emojis here -->
+      </div>
+  
+      <script>
+        // Function to handle emoji selection
+        function selectEmoji(emoji) {
+          const username = document.getElementById("username").value;
+  
+          if (!username) {
+            alert("Please provide a username.");
+            return;
+          }
+  
+  
+          // Append the new message to the chat board
+          const chatBoardInner = document.getElementById("chat-board-inner");
+          chatBoardInner.appendChild(messageElement);
+  
+          // Scroll to the newest message
+          chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+  
+          // Hide the emoji dropdown
+          document.querySelector(".emoji-dropdown").style.display = "none";
+        }
+  
+        // Toggle the visibility of the emoji picker dropdown
+        function toggleEmojiDropdown() {
+          const dropdown = document.querySelector(".emoji-dropdown");
+          dropdown.style.display =
+            dropdown.style.display === "none" ? "block" : "none";
+        }
+  
+        // Add event listeners to each folder image to display the relevant emojis
+        document.querySelectorAll(".folder img").forEach((folder) => {
+          folder.addEventListener("click", function () {
+            const folderId = this.getAttribute("data-folder");
+
+ // Hide all emoji containers
+              document.querySelectorAll(".emoji-container").forEach((container) => {
+                container.style.display = "none";
+              });
+
+              // Show the selected folder's emoji container
+              const selectedFolder = document.getElementById(folderId);
+              if (selectedFolder) {
+                selectedFolder.style.display = "grid";
+              }
+            });
+          });
+
+          // Close dropdown when clicking outside
+          document.addEventListener("click", function (event) {
+            const dropdown = document.querySelector(".emoji-dropdown");
+            const emojiButton = document.querySelector("#emoji-btn");
+            if (!emojiButton.contains(event.target) && !dropdown.contains(event.target)) {
+              dropdown.style.display = "none";
+            }
+          });
+        </script>
+      </body>
+    </html>
+
+
+<!-- Section 1 - END -->
+<!-- Emoji Sticker - Emoji ButtonEmojis Below - End -->
+<!-- Emoji Sticker DropDown Emojis Below - End -->
+
+
+</Div>
+
+<!-- Section 2 -->
+<!-- Sticker Button Emojis Below -->
+<!-- Sticker DropDown Emojis Below -->
+        
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sticker Picker</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          position: relative; /* Ensure the dropdown can appear outside the container */
+      }
+  
+      .emoji-button {
+          cursor: pointer;
+          background-color: #ffffff3d;
+          border: 2px solid #000000;
+          padding: 10px;
+          border-radius: 10px;
+      }
+  
+      .sticker-dropdown {
+          display: none;
+          position: absolute;
+          border: 1px solid #cccccc;
+          background-color: rgba(255, 255, 255, 0.719);
+          padding: 2px;
+          border-radius: 2px;
+          max-width: 400px;
+          z-index: 1000;
+          margin-top: 10px;
+          overflow: visible; /* Allow dropdown to go outside its container */
+      }
+  
+      .folder {
+          display: flex;
+          justify-content: space-around;
+          margin-bottom: 10px;
+      }
+  
+      .folder img {
+          width: 30px;
+          height: 30px;
+          cursor: pointer;
+      }
+  
+      .sticker-container {
+          display: none; /* Ensure sticker containers are hidden initially */
+          grid-template-columns: repeat(5, 1fr);
+          gap: 10px;
+      }
+  
+      .sticker-container img {
+          width: 50px;
+          height: 50px;
+          cursor: pointer;
+      }
+  
+      /* Folders Section (Initially visible) */
+      #foldersSection {
+          display: flex;
+          justify-content: space-around;
+          margin-bottom: 10px;
+      }
+  
+      /* Stickers Section (Initially hidden) */
+      #stickersSection {
+          display: none;
+      }
+  
+      /* Adjusting button container for more space */
+      .button-container {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          margin-bottom: 30px; /* Add extra space to container for stickers avoid cutoff */
+          z-index: 100;
+      }
+  
+      /* Adjust the sticker dropdown to ensure it is fully visible */
+      .sticker-dropdown {
+          position: absolute;
+          top: -100px; /* Positioning it Higher or Lower to avoid cutting off */
+          left: 0;
+          right: 0;
+          z-index: 101; /* Make sure dropdown is on top */
+      }
+  
+      /* Sticker container styles for better layout */
+      .sticker-container {
+          display: none; /* Ensure sticker containers are hidden initially */
+          grid-template-columns: repeat(5, 1fr);
+          gap: 2px;
+          padding: 2px;
+          max-height: 500px; /* Limit height for scrolling */
+      }
+  </style>
+  </head>
+  <body>
+    <button class="emoji-button" onclick="toggleDropdown()">Sticker</button>
+
+    <!-- Sticker Dropdown -->
+    <div class="sticker-dropdown">
+      <div class="folder">
+        <!-- Folder 1 - Sticker Set 1 -->
+        <img
+          src="https://i.imgur.com/vMMQ2yW.png"
+          alt="Sticker Set 1"
+          data-folder="StickerSet1"
+        />
+
+        <!-- Folder 2 - Sticker Set 2 -->
+        <img
+          src="https://i.imgur.com/ZeZ4Oi1.png"
+          alt="Sticker Set 2"
+          data-folder="StickerSet2"
+        />
+        <!-- Folder 3 - Sticker Set 3 -->
+        <img
+          src="https://i.imgur.com/ktrUco8.png"
+          alt="Sticker Set 3"
+          data-folder="StickerSet3"
+        />
+      </div>
+
+      <!-- Sticker Containers for each folder -->
+
+      <!-- Sticker Set 1 - Sticker Container -->
+      <div class="sticker-container" id="StickerSet1">
+        <img
+          src="https://i.imgur.com/BtVNfrZ.png"
+          alt="Comment and Glow Stickers 1"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/5t7qeHn.png"
+          alt="Comment and Glow Stickers 2"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/tiwAIFQ.png"
+          alt="Comment and Glow Stickers 3"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/BPjO4XF.png"
+          alt="Comment and Glow Stickers 4"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/du0cXN9.png"
+          alt="Comment and Glow Stickers 5"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/wnvxt7E.png"
+          alt="Comment and Glow Stickers 6"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/LscAjf8.png"
+          alt="Comment and Glow Stickers 7"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/FCrvTLq.png"
+          alt="Comment and Glow Stickers 8"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/s2pbzQV.png"
+          alt="Comment and Glow Stickers 9"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/uZkqyWf.png"
+          alt="Comment and Glow Stickers 10"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/vMMQ2yW.png"
+          alt="Comment and Glow Stickers 11"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/9OSHdIv.png"
+          alt="Comment and Glow Stickers 12"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/eX6s3fu.png"
+          alt="Comment and Glow Stickers 13"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/bSCpqEW.png"
+          alt="Comment and Glow Stickers 14"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/ixTmZbg.png"
+          alt="Comment and Glow Stickers 15"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/9mpKnUs.png"
+          alt="Comment and Glow Stickers 16"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/Eg54Len.png"
+          alt="Comment and Glow Stickers 17"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/6uv97FI.png"
+          alt="Comment and Glow Stickers 18"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/pQ4rNxt.png"
+          alt="Comment and Glow Stickers 19"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/6CBOELf.png"
+          alt="Comment and Glow Stickers 20"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/Bc6oluX.png"
+          alt="Comment and Glow Stickers 21"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/wEUX7My.png"
+          alt="Comment and Glow Stickers 22"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/v7Dn1CB.png"
+          alt="Comment and Glow Stickers 23"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/cXNJEf1.png"
+          alt="Comment and Glow Stickers 24"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/4mzJNdF.png"
+          alt="Comment and Glow Stickers 25"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/qTlWAYq.png"
+          alt="Comment and Glow Stickers 26"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/IWbWq1n.png"
+          alt="Comment and Glow Stickers 27"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/CUT2AXG.png"
+          alt="Comment and Glow Stickers 28"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/0DTyMhE.png"
+          alt="Comment and Glow Stickers 29"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/NJa3CuM.png"
+          alt="Comment and Glow Stickers 30"
+          data-folder="CommentandGlowStickers"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+      </div>
+
+      <!-- Sticker Set 2 - Sticker Container -->
+      <div class="sticker-container" id="StickerSet2">
+        <img
+          src="https://i.imgur.com/i6b7mMK.png"
+          alt="Sticker Set 2 1"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/13e9xOR.png"
+          alt="Sticker Set 2 2"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/KxKRuyk.png"
+          alt="Sticker Set 2 3"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/PLTafxQ.png"
+          alt="Sticker Set 2 4"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/cuAubVK.png"
+          alt="Sticker Set 2 5"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/vlqANd1.png"
+          alt="Sticker Set 2 6"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/qJ9IOfC.png"
+          alt="Sticker Set 2 7"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/Zze85Pw.png"
+          alt="Sticker Set 2 8"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/6o5QPbz.png"
+          alt="Sticker Set 2 9"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/pBaJmSl.png"
+          alt="Sticker Set 2 10"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/sqISFua.png"
+          alt="Sticker Set 2 11"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/FFkbZKt.png"
+          alt="Sticker Set 2 12"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/ZeZ4Oi1.png"
+          alt="Sticker Set 2 13"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/6iqQTCq.png"
+          alt="Sticker Set 2 14"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/xdVGlOo.png"
+          alt="Sticker Set 2 15"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/2gaOQro.png"
+          alt="Sticker Set 2 16"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/OaL8Rwl.png"
+          alt="Sticker Set 2 17"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/U7cZAgh.png"
+          alt="Sticker Set 2 18"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/qNGOkhc.png"
+          alt="Sticker Set 2 19"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/DojnWW4.png"
+          alt="Sticker Set 2 20"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+      </div>
+
+      <!-- Sticker Set 3 - Sticker Container -->
+      <div class="sticker-container" id="StickerSet3">
+        <img
+          src="https://i.imgur.com/uPCxs7o.png"
+          alt="Sticker Set 3 1"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/BlrWjHT.png"
+          alt="Sticker Set 3 2"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/RiE8FiQ.png"
+          alt="Sticker Set 3 3"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/fJKVn04.png"
+          alt="Sticker Set 3 4"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/dTW8p66.png"
+          alt="Sticker Set 3 5"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/ybWFw6w.png"
+          alt="Sticker Set 3 7"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/Ru0GUxl.png"
+          alt="Sticker Set 3 8"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/DBolGqN.png"
+          alt="Sticker Set 3 9"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/dBLCtRP.png"
+          alt="Sticker Set 3 10"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/n6EFLAR.png"
+          alt="Sticker Set 3 11"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/uCjQLYU.png"
+          alt="Sticker Set 3 12"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/yaiadiv.png"
+          alt="Sticker Set 3 13"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+        <img
+          src="https://i.imgur.com/P4ocktR.png"
+          alt="Sticker Set 3 14"
+          class="sticker-img"
+          onclick="selectSticker(this)"
+        />
+
+        <img
+  src="https://i.imgur.com/j9YOAtW.png"
+  alt="Sticker Set 3 15"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+  />
+<img
+  src="https://i.imgur.com/YLH72jA.png"
+  alt="Sticker Set 3 16"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/gGMwiLt.png"
+  alt="Sticker Set 3 17"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/ktrUco8.png"
+  alt="Sticker Set 3 18"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/fwbfDCe.png"
+  alt="Sticker Set 3 19"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/i7MS77g.png"
+  alt="Sticker Set 3 20"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/pBGfdSX.png"
+  alt="Sticker Set 3 21"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/S4OWdaF.png"
+  alt="Sticker Set 3 22"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/lOXgKke.png"
+  alt="Sticker Set 3 23"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/peXowZD.png"
+  alt="Sticker Set 3 24"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/oV6JWj4.png"
+  alt="Sticker Set 3 25"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/oaIDQyT.png"
+  alt="Sticker Set 3 26"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/tNZaD2d.png"
+  alt="Sticker Set 3 27"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/dCq1Snr.png"
+  alt="Sticker Set 3 28"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/0ws4CaJ.png"
+  alt="Sticker Set 3 29"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/ouZFxx7.png"
+  alt="Sticker Set 3 30"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+<img
+  src="https://i.imgur.com/YqITbDk.png"
+  alt="Sticker Set 3 31"
+  class="sticker-img"
+  onclick="selectSticker(this)"
+/>
+</div>
+
+<script>
+  // Function to handle sticker selection
+  function selectSticker(sticker) {
+    const username = document.getElementById("username").value;
+
+    if (!username) {
+      alert("Please provide a username.");
+      return;
+    }
+
+    // Create a new message element with the selected sticker
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message");
+    messageElement.innerHTML =
+      "<strong>" +
+      username +
+      "</strong>: <img src='" +
+      sticker.src +
+      "' alt='Sticker' class='content' style='width: 80px; height: 80px;' />";
+
+    // Append the new message to the chat board
+    const chatBoardInner = document.getElementById("chat-board-inner");
+    chatBoardInner.appendChild(messageElement);
+
+    // Scroll to the newest message
+    chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+
+    // Hide the sticker dropdown
+    document.querySelector(".sticker-dropdown").style.display = "none";
+  }
+
+  // Toggle the visibility of the sticker picker dropdown
+  document
+    .querySelector(".emoji-button")
+    .addEventListener("click", function () {
+      const dropdown = document.querySelector(".sticker-dropdown");
+      dropdown.style.display =
+        dropdown.style.display === "none" ? "block" : "none";
+    });
+
+  // Add event listeners to each folder image to display the relevant stickers
+  document.querySelectorAll(".folder img").forEach((folder) => {
+    folder.addEventListener("click", function () {
+      const folderId = this.getAttribute("data-folder");
+
+      // Hide all sticker containers
+      document.querySelectorAll(".sticker-container").forEach((container) => {
+        container.style.display = "none";
+      });
+
+      // Show the selected folder's sticker container
+      const selectedFolder = document.getElementById(folderId);
+      if (selectedFolder) {
+        selectedFolder.style.display = "grid";
+      }
+    });
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function (event) {
+    const dropdown = document.querySelector(".sticker-dropdown");
+    const emojiButton = document.querySelector(".emoji-button");
+    if (
+      !emojiButton.contains(event.target) &&
+      !dropdown.contains(event.target)
+    ) {
+      dropdown.style.display = "none";
+    }
+  });
+</script>
+
+<!-- Section 2 -->
+<!-- Sticker Button Emojis Below - End -->
+<!-- Sticker DropDown Emojis Below - End -->
+
+
+</div>
+
+<!-- Section 3 -->
+<!-- GIFT Button Emojis Below -->
+<!-- GIFT Dropdown Emojis Below -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gift Picker</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        position: relative; /* Ensure the dropdown can appear outside the container */
+      }
+
+      .emoji-button,
+      #gift-btn {
+        cursor: pointer;
+        background-color: #ffffff3d;
+        border: 2px solid #000000;
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      .gift-dropdown {
+        display: none;
+        position: absolute;
+        border: 1px solid #cccccc;
+        background-color: rgba(255, 255, 255, 0.719);
+        padding: 2px;
+        border-radius: 2px;
+        max-width: 400px;
+        z-index: 1000;
+        margin-top: 10px;
+        overflow: visible; /* Allow dropdown to go outside its container */
+      }
+
+      .folder {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 10px;
+      }
+
+      .folder img {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+      }
+
+      .gift-container {
+        display: none;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+      }
+
+      .gift-container img {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+      }
+
+      /* Adjusting button container for more space */
+      .button-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 30px; /* Add extra space to container for gifts avoid cutoff */
+        z-index: 100;
+      }
+
+      /* Adjust the dropdown to ensure it is fully visible */
+      .gift-dropdown {
+        position: absolute;
+        top: -100px; /* Adjusting position to ensure it's in the correct area */
+        left: 0;
+        right: 0;
+        z-index: 101; /* Make sure dropdown is on top */
+      }
+
+      /* Container styles for better layout */
+      .gift-container {
+        display: none;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
+        padding: 2px;
+        max-height: 400px; /* Limit height for scrolling */
+      }
+    </style>
+  </head>
+  <body>
+    <button id="gift-btn" onclick="toggleGiftDropdown()">Gift</button>
+
+    <!-- Gift Dropdown -->
+    <div class="gift-dropdown">
+      <div class="folder">
+        <!-- Folder 1 - Gift Set 1 -->
+        <img
+          src="https://i.imgur.com/a9ZUemc.png"
+          alt="Gift Items"
+          data-folder="GiftSet1"
+        />
+
+        <!-- Folder 2 - Gift Set 2 -->
+        <img
+          src="https://i.imgur.com/gsM36OQ.png"
+          alt="Food Gifts"
+          data-folder="GiftSet2"
+        />
+
+        <!-- Folder 3 - Gift Set 3 -->
+        <img
+          src="https://i.imgur.com/5ywipwu.png
+          "
+          alt="Holiday Gifts"
+          data-folder="GiftSet3"
+        />
+      </div>
+
+      <!-- Gift Containers for each folder -->
+
+      <!-- Gift Set 1 - Gift Container -->
+      <div class="gift-container" id="GiftSet1">
+        <img
+        src="https://i.imgur.com/CZZD4H0.png"
+        alt="Gift Image 1"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/KGmrgKG.png"
+        alt="Gift Image 2"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/Dg1Vupz.png"
+        alt="Gift Image 3"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/kvDeqLP.png"
+        alt="Gift Image 4"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/Jc0t1BK.png"
+        alt="Gift Image 5"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/BpaaGcD.png"
+        alt="Gift Image 6"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/i5blgBg.png"
+        alt="Gift Image 7"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/BTEMwRK.png"
+        alt="Gift Image 8"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/bslQeb7.png"
+        alt="Gift Image 9"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/6HN7jJS.png"
+        alt="Gift Image 10"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/rXUnPbH.png"
+        alt="Gift Image 11"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/jx2Q5QN.png"
+        alt="Gift Image 12"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/1sOLllH.png"
+        alt="Gift Image 13"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/YexaMn9.png"
+        alt="Gift Image 14"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/hI6rgad.png"
+        alt="Gift Image 15"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/7S8dMQm.png"
+        alt="Gift Image 16"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/19dN6yi.png"
+        alt="Gift Image 17"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/dsPPC5h.png"
+        alt="Gift Image 18"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/rXb2big.png"
+        alt="Gift Image 19"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/dln7RrJ.png"
+        alt="Gift Image 20"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/AxrvYnl.png"
+        alt="Gift Image 21"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/RbcefTE.png"
+        alt="Gift Image 22"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/eD12TiF.png"
+        alt="Gift Image 23"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/XDARLQz.png"
+        alt="Gift Image 24"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/muAauct.png"
+        alt="Gift Image 25"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/dnOYTqG.png"
+        alt="Gift Image 26"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/3tN0rKV.png"
+        alt="Gift Image 27"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/Q3JT3SQ.png"
+        alt="Gift Image 28"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/qxKjHKc.png"
+        alt="Gift Image 29"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/YDz3kwz.png"
+        alt="Gift Image 30"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/1fs08Uv.png"
+        alt="Gift Image 31"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/UgciZsS.png"
+        alt="Gift Image 32"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/pQqV4XC.png"
+        alt="Gift Image 33"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/0DThMo1.png"
+        alt="Gift Image 34"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+      <img
+        src="https://i.imgur.com/KUOH51d.png"
+        alt="Gift Image 35"
+        class="gift-img"
+        onclick="selectGift(this)"
+      />
+    </div>
+    
+
+      <!-- Gift Set 2 - Gift Container -->
+      <div class="gift-container" id="GiftSet2">
+        <img
+          src="https://i.imgur.com/pijeywB.png"
+          alt="Gift Image 1"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/IxMV4L9.png"
+          alt="Gift Image 2"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/XA33HUD.png"
+          alt="Gift Image 3"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/7KktcCW.png"
+          alt="Gift Image 4"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/0YtxMjB.png"
+          alt="Gift Image 5"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/HSOTY7e.png"
+          alt="Gift Image 6"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/qoX8umm.png"
+          alt="Gift Image 7"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/Z1FEnKF.png"
+          alt="Gift Image 8"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/px7AYpY.png"
+          alt="Gift Image 9"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/q1QrSpB.png"
+          alt="Gift Image 10"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/68d5KUn.png"
+          alt="Gift Image 11"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/fesdR91.png"
+          alt="Gift Image 12"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/W9ETTt7.png"
+          alt="Gift Image 13"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/IgobqyU.png"
+          alt="Gift Image 14"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/bJu2Fso.png"
+          alt="Gift Image 15"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/W1ToOc1.png"
+          alt="Gift Image 16"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/CghrseU.png"
+          alt="Gift Image 17"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/Pz62aCk.png"
+          alt="Gift Image 18"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/y2I99H8.png"
+          alt="Gift Image 19"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/uW6TE4b.png"
+          alt="Gift Image 20"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/I3ELsdA.png"
+          alt="Gift Image 21"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/gmf83nu.png"
+          alt="Gift Image 22"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/U4WdblH.png"
+          alt="Gift Image 23"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/97cMVwY.png"
+          alt="Gift Image 24"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/VTzfRiN.png"
+          alt="Gift Image 25"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/m4vI09v.png"
+          alt="Gift Image 26"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/5FY5oJT.png"
+          alt="Gift Image 27"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/JPlq1kq.png"
+          alt="Gift Image 28"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/odbWWH0.png"
+          alt="Gift Image 29"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/F546Jzu.png"
+          alt="Gift Image 30"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/GtUTTF2.png"
+          alt="Gift Image 31"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/qmifhYK.png"
+          alt="Gift Image 32"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/hd0aBM5.png"
+          alt="Gift Image 33"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/8lR9iG1.png"
+          alt="Gift Image 34"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/aZE1Pbd.png"
+          alt="Gift Image 35"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+      </div>
+
+      <!-- Gift Set 3 - Gift Container -->
+      <div class="gift-container" id="GiftSet3">
+        <img
+          src="https://i.imgur.com/3bNZQrz.png"
+          alt="Gift Image 1"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/AXrxshV.png"
+          alt="Gift Image 2"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/a9ZUemc.png"
+          alt="Gift Image 3"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/UbW0SxE.png"
+          alt="Gift Image 4"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/Y9uSxeU.png"
+          alt="Gift Image 5"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/XGHUhvy.png"
+          alt="Gift Image 6"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/dcqXc4m.png"
+          alt="Gift Image 7"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/VaeWz5H.png"
+          alt="Gift Image 8"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/5ywipwu.png"
+          alt="Gift Image 9"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/gsM36OQ.png"
+          alt="Gift Image 10"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/4AenCYA.png"
+          alt="Gift Image 11"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/cEnnxCA.png"
+          alt="Gift Image 12"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/Vd032Qg.png"
+          alt="Gift Image 13"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/Y3EhVqy.png"
+          alt="Gift Image 14"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/ZwkPxTH.png"
+          alt="Gift Image 15"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/NGueu7D.png"
+          alt="Gift Image 16"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/8VjTDWU.png"
+          alt="Gift Image 17"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/YfUhSOm.png"
+          alt="Gift Image 18"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/lV1RnOI.png"
+          alt="Gift Image 19"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/9gFg3iZ.png"
+          alt="Gift Image 20"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/NfQ5YIR.png"
+          alt="Gift Image 21"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/iTK0u1B.png"
+          alt="Gift Image 22"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/rm9tDHV.png"
+          alt="Gift Image 23"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/wpRbL8b.png"
+          alt="Gift Image 24"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/aNEa1nx.png"
+          alt="Gift Image 25"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/VHkO8Aa.png"
+          alt="Gift Image 26"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/Qs2ABmh.png"
+          alt="Gift Image 27"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/Sj5rwyK.png"
+          alt="Gift Image 28"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/cOSnyJF.png"
+          alt="Gift Image 29"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+        <img
+          src="https://i.imgur.com/yFqorJd.png"
+          alt="Gift Image 30"
+          class="gift-img"
+          onclick="selectGift(this)"
+        />
+      </div>
+    </div>
+
+    <script>
+ // Function to handle gift selection
+ function selectGift(gift) {
+        const username = document.getElementById("username").value;
+
+        if (!username) {
+          alert("Please provide a username.");
+          return;
+        }
+
+        // Create a new message element with the selected gift
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message");
+        messageElement.innerHTML =
+          "<strong>" +
+          username +
+          "</strong>: <img src='" +
+          gift.src +
+          "' alt='Gift' class='content gift' />";
+
+        // Append the new message to the chat board
+        const chatBoardInner = document.getElementById("chat-board-inner");
+        chatBoardInner.appendChild(messageElement);
+
+        // Scroll to the newest message
+        chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+
+        // Hide the gift dropdown
+        document.querySelector(".gift-dropdown").style.display = "none";
+      }
+
+      // Toggle the visibility of the gift picker dropdown
+      function toggleGiftDropdown() {
+        const dropdown = document.querySelector(".gift-dropdown");
+        dropdown.style.display =
+          dropdown.style.display === "none" ? "block" : "none";
+      }
+
+      // Add event listeners to each folder image to display the relevant gifts
+      document.querySelectorAll(".folder img").forEach((folder) => {
+        folder.addEventListener("click", function () {
+          const folderId = this.getAttribute("data-folder");
+
+          // Hide all gift containers
+          document.querySelectorAll(".gift-container").forEach((container) => {
+            container.style.display = "none";
+          });
+
+          // Show the selected folder's gift container
+          const selectedFolder = document.getElementById(folderId);
+          if (selectedFolder) {
+            selectedFolder.style.display = "grid";
+          }
+        });
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        const dropdown = document.querySelector(".gift-dropdown");
+        const giftButton = document.querySelector("#gift-btn");
+        if (
+          !giftButton.contains(event.target) &&
+          !dropdown.contains(event.target)
+        ) {
+          dropdown.style.display = "none";
+        }
+      });
+
+      
+    </script>
+  </body>
+</html>
+
+<!-- Section 3 -->
+<!-- GIFT Button Emojis Below - End -->
+<!-- GIFT Dropdown Emojis Below End -->
+
+        </div>
+  
+   <!-- Coin Purchase Options -->
+   <div
+   class="coin-purchase-options"
+   style="
+     display: flex;
+     justify-content: center;
+     gap: 20px;
+     margin-top: 20px;
+     Top: -140px;
+   "
+ >
+   <div>
+     <img
+       src="https://i.imgur.com/oAgz7nL.png"
+       alt="Buy 5 Coins"
+       onclick="buyCoins('https://www.paypal.com/ncp/payment/4NCG97K8VMNUN')"
+       style="width: 100px; height: 100px; cursor: pointer"
+     />
+     <p>$7</p>
+   </div>
+   <div>
+     <img
+       src="https://i.imgur.com/cImE7LT.png"
+       alt="Buy 10 Coins"
+       onclick="buyCoins('https://www.paypal.com/ncp/payment/DKEYLHT49JQ92')"
+       style="width: 100px; height: 100px; cursor: pointer"
+     />
+     <p>$13</p>
+   </div>
+   <div>
+     <img
+       src="https://i.imgur.com/pKx3hNw.png"
+       alt="Buy 30 Coins"
+       onclick="buyCoins('https://www.paypal.com/ncp/payment/ZK74XWBGZUL6W')"
+       style="width: 100px; height: 100px; cursor: pointer"
+     />
+     <p>$35</p>
+   </div>
+ </div>
+
+ <style>
+   .disclaimer {
+     margin-top: 20px; 
+     top: 130px;
+   }
+ </style>
+
+ <div class="disclaimer">
+   <p>All coins are tracked by cookies.</p>
+ </div>
+</div>
+</div>
+
+<div class="coin-popup" id="coin-popup">
+<p>Thank you for keeping up with us! You have received 1 free coin.</p>
+<button onclick="closePopup()">Close</button>
+</div>
+
+   <script>
+     // Function to handle gift selection
+     function selectGift(gift) {
+       const username = document.getElementById("username").value;
+
+       if (!username) {
+         alert("Please provide a username.");
+         return;
+       }
+
+       // Create a new message element with the selected gift
+       const messageElement = document.createElement("div");
+       messageElement.classList.add("message");
+       messageElement.innerHTML =
+         "<strong>" +
+         username +
+         "</strong>: <img src='" +
+         gift.src +
+         "' alt='Gift' class='content gift' />";
+
+       // Append the new message to the chat board
+       const chatBoardInner = document.getElementById("chat-board-inner");
+       chatBoardInner.appendChild(messageElement);
+
+       // Scroll to the newest message
+       chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+
+       // Hide the gift dropdown
+       document.querySelector(".gift-dropdown").style.display = "none";
+     }
+
+     // Toggle the visibility of the gift picker dropdown
+     function toggleGiftDropdown() {
+       const dropdown = document.querySelector(".gift-dropdown");
+       dropdown.style.display =
+         dropdown.style.display === "none" ? "block" : "none";
+     }
+
+     // Add event listeners to each folder image to display the relevant gifts
+     document.querySelectorAll(".folder img").forEach((folder) => {
+       folder.addEventListener("click", function () {
+         const folderId = this.getAttribute("data-folder");
+
+         // Hide all gift containers
+         document.querySelectorAll(".gift-container").forEach((container) => {
+           container.style.display = "none";
+         });
+
+         // Show the selected folder's gift container
+         const selectedFolder = document.getElementById(folderId);
+         if (selectedFolder) {
+           selectedFolder.style.display = "grid";
+         }
+       });
+     });
+
+     // Close dropdown when clicking outside
+     document.addEventListener("click", function (event) {
+       const dropdown = document.querySelector(".gift-dropdown");
+       const giftButton = document.querySelector("#gift-btn");
+       if (!giftButton.contains(event.target) && !dropdown.contains(event.target)) {
+         dropdown.style.display = "none";
+       }
+     });
+
+     // Function to generate a random username with adverb, noun, verb, and number
+     function generateRandomName() {
+       const adverbs = [
+       "Adventure", "Banana", "Baron", "Baroness", "BathBomb", "Beautiful", "Blossom", "Bubble", "Bubble Bath", "Bubblegum", "Breezy", "Burger", "Candy", "Captain", "Cloud", 
+       "Coconut", "Commander", "Constable", "Cosmic", "Crown", "Dandelion", "Dream", "Empress", "Fairy", "Fizzy", "Flame", "Flicker", "Firefly", "Food", "Frozen", "Gadget", 
+       "Ginger", "Gingerbread", "Giggle", "Glimmer", "Grill", "Gorgeous", "King", "Lava", "Lavender", "Ladybell", "Lemonade", "Lullaby", "Lord", "Lunar", "Mango", "MeatLover", 
+       "Merry", "Mystic", "Night", "Peach", "Peppermint", "Pixie", "Potion", "Pinecone", "Pretty", "Princess", "Puddle", "Rainbow", "Squire", "Shiny", "Sparkle", "Star", "Starlight", 
+       "Steak", "Sugarplum", "Sundae", "Taco", "Taffy", "Thunderous", "Twilight", "Twinkle", "Vortex", "Whimsy", "Whisker", "Whispering", "Wyvern", "Yummy", "Admiral", 
+       "Archduke", "Archduchess", "Baron", "Baroness", "Banshee", "Bandit", "Bard", "Captain", "Champion", "Chaser", "Cleric", "Commander", "Constable", "Conqueror", 
+       "Crusader", "Dreamer", "Emperor", "Empress", "Explorer", "Fairy", "Flame", "General", "Goblin", "Guardian", "Guru", "High Priest", "High Priestess", "Hunter", "Jester", 
+       "Knight", "Lancer", "Lady", "Lieutenant", "Lord", "Magician", "Master", "Monarch", "Moonstone", "Nobleman", "Noblewoman", "Paladin", "Pirate", "Princess", "Protector", 
+       "Prowler", "Prince", "Princess", "Ruler", "Sage", "Seeker", "Sentinel", "Shaman", "Sheriff", "Squire", "Sorcerer", "Sorceress", "Supreme", "Titan", "Tinker", "Viceroy", 
+       "Voyager", "Warrior", "Weaver", "Wizard", "Owl"];
+
+       const verbs = [
+       "Liam","Noah","Oliver","James","Elijah","Mateo","Theodore","Henry","Lucas","William","Benjamin","Jack","Alexander","Daniel","Michael","Sebastian","Samuel","David",
+       "Joseph","Carter","Owen","Wyatt","John","Matthew","Luke","Olivia","Emma","Charlotte","Amelia","Sophia","Mia","Isabella","Ava","Evelyn","Luna","Harper","Ella",
+       "Abigail","Scarlett","Grace","Lily","Aria","Chloe","Isla","Layla","Mila","Nora","Zoey","Stella","Hazel","Dan","Danny","Bob","Bobert","Peter"];
+
+       const nouns = ["_", "-", "", ""];
+
+const randomNumber = Math.floor(Math.random() * 10000); // Random number from 1 to 4 digits
+
+const randomName =
+adverbs[Math.floor(Math.random() * adverbs.length)] +
+verbs[Math.floor(Math.random() * verbs.length)] +
+nouns[Math.floor(Math.random() * nouns.length)] +
+randomNumber;
+
+document.getElementById("username").value = randomName;
+}
+
+// Function to check the username (can be customized for validation)
+function checkUsername() {
+const username = document.getElementById("username").value;
+if (adminUsernames.includes(username)) {
+const password = prompt("Enter admin password:");
+if (!password || !validatePassword(password)) {
+ alert("Invalid password. You cannot use this username.");
+ document.getElementById("username").value = "";
+}
+}
+
+if (!username) {
+document.getElementById("error-message").textContent =
+ "Username is required!";
+} else {
+document.getElementById("error-message").textContent = "";
+}
+}
+
+// Function to validate the password
+function validatePassword(password) {
+return bcrypt.compareSync(password, adminPasswordHash);
+}
+
+// Add event listener to send message when Enter key is pressed
+document
+.getElementById("message-input")
+.addEventListener("keydown", function (event) {
+if (event.key === "Enter" && !event.shiftKey) {
+ event.preventDefault(); // Prevent line break
+ sendMessage();
+}
+});
+
+// Function to handle emoji selection
+function selectEmoji(emoji) {
+const username = document.getElementById("username").value;
+if (!username) {
+alert("Please provide a username.");
+return;
+}
+// Check if the user is an admin
+if (!adminUsernames.includes(username.toLowerCase())) {
+// Deduct coins for non-admin users
+if (!deductCoins(1)) {
+ alert("You need 1 coin to use an emoji.");
+ return;
+}
+}
+const messageElement = document.createElement("div");
+messageElement.classList.add("message");
+messageElement.innerHTML =
+"<strong>" +
+username +
+"</strong>: <img src='" +
+emoji.src +
+"' alt='Emoji' class='content emoji' />";
+const chatBoardInner = document.getElementById("chat-board-inner");
+chatBoardInner.appendChild(messageElement);
+chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+document.querySelector(".emoji-dropdown").style.display = "none";
+}
+
+// Function to handle sticker selection
+function selectSticker(sticker) {
+const username = document.getElementById("username").value;
+if (!username) {
+alert("Please provide a username.");
+return;
+}
+// Check if the user is an admin
+if (!adminUsernames.includes(username.toLowerCase())) {
+// Deduct coins for non-admin users
+if (!deductCoins(2)) {
+ alert("You need 2 coins to use a sticker.");
+ return;
+}
+}
+const messageElement = document.createElement("div");
+messageElement.classList.add("message");
+messageElement.innerHTML =
+"<strong>" +
+username +
+"</strong>: <img src='" +
+sticker.src +
+"' alt='Sticker' class='content sticker' />";
+const chatBoardInner = document.getElementById("chat-board-inner");
+chatBoardInner.appendChild(messageElement);
+chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+document.querySelector(".sticker-dropdown").style.display = "none";
+}
+
+// Function to handle gift selection
+function selectGift(gift) {
+const username = document.getElementById("username").value;
+if (!username) {
+alert("Please provide a username.");
+return;
+}
+// Check if the user is an admin
+if (!adminUsernames.includes(username.toLowerCase())) {
+// Deduct coins for non-admin users
+if (!deductCoins(5)) {
+ alert("You need 5 coins to use a gift.");
+ return;
+}
+}
+const messageElement = document.createElement("div");
+messageElement.classList.add("message");
+messageElement.innerHTML =
+"<strong>" +
+username +
+"</strong>: <img src='" +
+gift.src +
+"' alt='Gift' class='content gift' />";
+const chatBoardInner = document.getElementById("chat-board-inner");
+chatBoardInner.appendChild(messageElement);
+chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+document.querySelector(".gift-dropdown").style.display = "none";
+}
+
+// Function to buy coins
+function buyCoins(url) {
+window.open(url, "_blank");
+}
+
+// Function to deduct coins
+function deductCoins(amount) {
+const currentCoins = getCookie("coins") || 0;
+if (currentCoins < amount) {
+return false;
+}
+setCookie("coins", currentCoins - amount, 30);
+updateCoinCounter();
+return true;
+}
+
+// Function to update coin counter
+function updateCoinCounter() {
+const currentCoins = getCookie("coins") || 0;
+document.getElementById("coin-counter").textContent = currentCoins;
+}
+
+// Function to set cookie
+function setCookie(name, value, days) {
+const d = new Date();
+d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+const expires = "expires=" + d.toUTCString();
+document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+// Function to get cookie
+function getCookie(name) {
+const cname = name + "=";
+const decodedCookie = decodeURIComponent(document.cookie);
+const ca = decodedCookie.split(";");
+for (let i = 0; i < ca.length; i++) {
+let c = ca[i];
+while (c.charAt(0) == " ") {
+ c = c.substring(1);
+}
+if (c.indexOf(cname) == 0) {
+ return c.substring(cname.length, c.length);
+}
+}
+return "";
+}
+
+// Function to show popup for free coin
+function showPopup() {
+document.getElementById("coin-popup").style.display = "block";
+}
+
+// Function to close popup for free coin
+function closePopup() {
+document.getElementById("coin-popup").style.display = "none";
+}
+
+// 1 free coin after 30 days
+// Function to reward free coin after 30 consecutive days
+function rewardFreeCoin() {
+const lastVisitDate = getCookie("lastVisitDate");
+const currentDate = new Date();
+const thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+
+if (!lastVisitDate) {
+setCookie("lastVisitDate", new Date().toUTCString(), 30);
+return;
+}
+
+const lastVisit = new Date(lastVisitDate);
+const daysDifference = Math.floor((currentDate - lastVisit) / (24 * 60 * 60 * 1000));
+
+if (daysDifference === 1) {
+const visitCount = parseInt(getCookie("visitCount") || "0") + 1;
+setCookie("visitCount", visitCount, 30);
+
+if (visitCount >= 30) {
+ const currentCoins = getCookie("coins") || 0;
+ setCookie("coins", parseInt(currentCoins) + 1, 30);
+ setCookie("visitCount", "0", 30); // Reset visit count after awarding the coin
+ updateCoinCounter();
+ showPopup();
+}
+} else if (daysDifference > 1) {
+setCookie("visitCount", "1", 30); // Reset visit count if a day is missed
+}
+
+setCookie("lastVisitDate", new Date().toUTCString(), 30);
+}
+
+// Initial setup
+document.addEventListener("DOMContentLoaded", function () {
+updateCoinCounter();
+rewardFreeCoin();
+});
+
+// 1 free coin after 30 days
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (event) {
+const emojiDropdown = document.querySelector(".emoji-dropdown");
+const stickerDropdown = document.querySelector(".sticker-dropdown");
+const giftDropdown = document.querySelector(".gift-dropdown");
+const emojiButton = document.querySelector("#emoji-btn");
+const stickerButton = document.querySelector("#sticker-btn");
+const giftButton = document.querySelector("#gift-btn");
+if (
+!emojiButton.contains(event.target) &&
+!emojiDropdown.contains(event.target)
+) {
+emojiDropdown.style.display = "none";
+}
+if (
+!stickerButton.contains(event.target) &&
+!stickerDropdown.contains(event.target)
+) {
+stickerDropdown.style.display = "none";
+}
+if (
+!giftButton.contains(event.target) &&
+!giftDropdown.contains(event.target)
+) {
+giftDropdown.style.display = "none";
+}
+});
+
+// Keep from Spamming - Anti spam messages
+// Function to handle message sending
+function sendMessage() {
+const username = document.getElementById("username").value;
+let message = document.getElementById("message-input").value;
+
+if (!username) {
+alert("Please add a username to send a message.");
+return;
+}
+
+// Check for spamming
+if (isSpamming(message)) {
+alert("You are sending too many similar messages. Please wait for 1 minute.");
+return;
+}
+
+// No foul language filter
+const foulWords = ["ass","bastard","bitch","crap","cunt","damn","dick","douche","faggot","fuck"," motherfucker","piss","prick","pussy","shit","slut","twat","whore","cock"]; // Add more foul words as needed
+const regex = new RegExp(foulWords.join("|"), "gi");
+message = message.replace(regex, (matched) => "*".repeat(matched.length));
+
+// Check for admin commands
+if (adminUsernames.includes(username.toLowerCase())) {
+if (message.startsWith("@")) {
+ const [command, targetUsername, ...args] = message.split(" ");
+ handleAdminCommand(command, targetUsername, args);
+ return;
+}
+}
+
+// Create a new message element
+const messageElement = document.createElement("div");
+messageElement.classList.add("message");
+messageElement.innerHTML =
+"<strong>" +
+username +
+"</strong>: <p class='content'>" +
+message +
+"</p>";
+
+// Append the new message to the chat board
+const chatBoardInner = document.getElementById("chat-board-inner");
+chatBoardInner.appendChild(messageElement);
+
+// Clear the message input
+document.getElementById("message-input").value = "";
+
+// Scroll to the newest message
+chatBoardInner.scrollTop = chatBoardInner.scrollHeight;
+
+// Record the message
+recordMessage(message);
+}
+
+const messageHistory = {};
+const cooldownUsers = new Set();
+function isSpamming(message) {
+  const username = document.getElementById("username").value;
+  if (cooldownUsers.has(username)) {
+    return true;
+  }
+
+  if (!messageHistory[username]) {
+    messageHistory[username] = [];
+  }
+
+  const now = Date.now();
+  messageHistory[username] = messageHistory[username].filter(
+    (entry) => now - entry.time < 1 * 60 * 1000
+  );
+
+  messageHistory[username].push({ message, time: now });
+
+  const sameMessageCount = messageHistory[username].filter(
+    (entry) => entry.message === message
+  ).length;
+
+  if (sameMessageCount >= 4) {
+    cooldownUsers.add(username);
+    setTimeout(() => cooldownUsers.delete(username), 1 * 60 * 1000);
+    return true;
+  }
+
+  return false;
+}
+
+function recordMessage(message) {
+  const username = document.getElementById("username").value;
+  if (!messageHistory[username]) {
+    messageHistory[username] = [];
+  }
+
+  messageHistory[username].push({ message, time: Date.now() });
+}
+
+// Admin-related functions and variables
+const adminUsernames = [
+  "fatty patty", "fattypatty", "fattypattyworkouts", "fatty patty workouts", "fatty patty workout", "fattypattyworkout",
+  "diaryofafatlady", "diary of a fat lady","pretty patty workouts",  "prettypattyworkouts", "pretty patty workout", 
+  "prettypattyworkout","pretty patty fitness","prettypattyfitness", "pretty patty", "prettypatty",
+].map(username => username.toLowerCase());
+
+// Function to check the username (can be customized for validation)
+function checkUsername() {
+  const username = document.getElementById("username").value.toLowerCase(); // Convert to lowercase
+  if (adminUsernames.includes(username)) {
+    const password = prompt("Enter admin password:");
+    if (!password || !validatePassword(password)) {
+      alert("Invalid password. You cannot use this username.");
+      document.getElementById("username").value = "";
+    }
+  }
+
+  if (!username) {
+    document.getElementById("error-message").textContent =
+      "Username is required!";
+  } else {
+    document.getElementById("error-message").textContent = "";
+  }
+}
+
+const adminPasswordHash = "$2y$04$jh3DIFlG5KBfdtgnnMOKNuZlUA7xYx48xp.iSKYt5OzopoK1KOXQa";
+const bcrypt = dcodeIO.bcrypt;
+
+function handleAdminCommand(command) {
+  const parts = command.split(' ');
+  const targetUsername = parts[0].substring(1); // Remove the '@' symbol
+  const action = parts[1];
+  const args = parts.slice(2);
+
+  if (action === "Coin") {
+    const amount = parseInt(args[0], 10);
+    if (amount === 1 || amount === 2) {
+      awardCoins(targetUsername, amount);
+    } else {
+      alert("Invalid coin amount. Use 1 or 2.");
+    }
+  } else if (action === "ban") {
+    const minutes = parseInt(args[0], 10);
+    if (minutes > 0 && minutes <= 60) {
+      banUser(targetUsername, minutes);
+    } else {
+      alert("Invalid ban duration. Use 1-60 minutes.");
+    }
+  }
+}
+
+// Example usage
+handleAdminCommand('@someuser ban 30');
+
+function awardCoins(username, amount) {
+  const currentCoins = getCookie("coins") || 0;
+  setCookie("coins", parseInt(currentCoins) + amount, 30);
+  updateCoinCounter();
+  alert(`Awarded ${amount} coins to ${username}.`);
+}
+
+function banUser(username, minutes) {
+  cooldownUsers.add(username);
+  setTimeout(() => cooldownUsers.delete(username), minutes * 60 * 1000);
+  alert(`Banned ${username} for ${minutes} minutes.`);
+}
+
+function checkMultipleAdmins() {
+  const currentAdmin = document.getElementById("username").value;
+  const loggedInAdmins = adminUsernames.filter(username => username !== currentAdmin && username in messageHistory);
+  if (loggedInAdmins.length > 0) {
+    const otherAdmin = loggedInAdmins[0];
+    const otherAdminIP = getCookie(otherAdmin + "_IP");
+    const kick = confirm(`Another admin (${otherAdmin}) is logged in from IP ${otherAdminIP}. Do you want to kick them?`);
+    if (kick) {
+      cooldownUsers.add(otherAdmin);
+      alert(`Kicked ${otherAdmin} from the chat.`);
+    }
+  }
+}
+
+//SUPER BANNED People.
+function permanentlyBanIP(ip) {
+  setCookie(ip + "_banned", "true", 365 * 10); // Ban for 10 years
+}
+
+const permanentlyBannedIPs = ["192.0.2.1", "192.0.2.3", "192.0.2.4"];
+permanentlyBannedIPs.forEach(ip => permanentlyBanIP(ip));
+
+// Function to check if an IP is permanently banned
+function isIPBanned(ip) {
+  return getCookie(ip + "_banned") === "true";
+}
+
+// Check for the user's IP and ban status on page load
+document.addEventListener("DOMContentLoaded", function () {
+  const userIP = "192.0.2.1"; // Replace with actual method to get user's IP
+  if (isIPBanned(userIP)) {
+    alert("Your IP is permanently banned from using this chat.");
+    document.body.innerHTML = ""; // Hide chat if IP is banned
+  } else {
+    updateCoinCounter();
+    rewardFreeCoin();
+    checkMultipleAdmins();
+  }
+});
+      </script>
+  </body>
 </html>
